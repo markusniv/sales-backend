@@ -11,6 +11,11 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/user', users);
 
+app.use((err, req, res, next) => {
+    const status = err.status || 500;
+    res.status(status).json({ message: err.message || 'internal error' });
+});
+
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })
