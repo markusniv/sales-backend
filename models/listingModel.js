@@ -18,7 +18,7 @@ const getListing = async (listingId, next) => {
 
 //returns all listings from listings table
 const getAllListings = async (next) => {
-  try{
+  try {
     const [rows] = await promisePool.execute("SELECT * FROM listings");
     return rows;
   } catch (e) {
@@ -32,7 +32,7 @@ const getAllListings = async (next) => {
 // TODO: Only listing owner or admin can modify listings.
 //Modify price or description of the listing
 const modifyListing = async (id, listing, next) => {
-  try{
+  try {
     const [modified_listing] = await promisePool.execute(
       "UPDATE listings SET description = ?, price = ? WHERE listing_id = ?",
       [listing.description, listing.price, id]);
@@ -43,9 +43,10 @@ const modifyListing = async (id, listing, next) => {
     next(err);
   }
 }
-
+// TODO: Only listing owner or admin can delete listings.
+//Delete specific listing from database
 const deleteListing = async (listing_id, next) => {
-  try{
+  try {
     const [rows] = await promisePool.execute(
       "DELETE FROM listings WHERE listing_id = ?", [listing_id]);
     return rows.affectedRows === 1;
