@@ -28,11 +28,23 @@ const getAllListings = async (next) => {
   }
 }
 
-
+const modifyListing = async (id, listing, next) => {
+  try{
+    const [modified_listing] = await promisePool.execute(
+      "UPDATE listings SET description = ?, price = ? WHERE listing_id = ?",
+      [listing.description, listing.price, id]);
+    return modified_listing;
+  } catch (e) {
+    console.error("error", e.message);
+    const err = httpError("sql error", 500);
+    next(err);
+  }
+}
 
 module.exports = {
   getListing,
   getAllListings,
+  modifyListing
 }
 
 

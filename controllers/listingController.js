@@ -1,7 +1,7 @@
 'use strict';
 
 const listingModel = require("../models/listingModel");
-const {httpError, controllerError} = require("../utils/errors");
+const {httpError} = require("../utils/errors");
 
 
 const getListing = async (req, res, next) =>  {
@@ -24,7 +24,18 @@ const getAllListings = async (req, res, next) => {
   next(err);
 }
 
+const modifyListing = async (req, res, next) => {
+  const response = await listingModel.modifyListing(req.params.id, req.body, next);
+  if(response.affectedRows !== 0){
+    res.json({ message: "listing modified" });
+    return;
+  }
+  const err = httpError("Failed to modify listing", 400);
+  next(err);
+}
+
 module.exports = {
   getListing,
   getAllListings,
+  modifyListing,
 }
