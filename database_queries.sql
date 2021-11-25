@@ -4,6 +4,7 @@ CREATE TABLE users (
   last_name VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL,
   passwd VARCHAR(100) NOT NULL,
+  role INT NOT NULL,
   PRIMARY KEY(user_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
