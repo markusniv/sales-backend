@@ -65,6 +65,7 @@ const modifyUser = async (current_user, id, user, next) => {
   }
 }
 
+
 const getUserLogin = async (params) => {
   try {
     console.log(params);
@@ -76,6 +77,9 @@ const getUserLogin = async (params) => {
     console.log('error', e.message);
   }
 };
+
+
+
 
 module.exports = {
   getUser,
