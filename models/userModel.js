@@ -56,6 +56,8 @@ const modifyUser = async (id, user, next) => {
   }
 }
 
+
+
 module.exports = {
   getUser,
   getAllUsers,
