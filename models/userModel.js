@@ -43,13 +43,21 @@ const addUser = async(user, next) => {
 
 // TODO: Make it so that users can only modify their own info
 
-const modifyUser = async (id, user, next) => {
+const modifyUser = async (current_user, id, user, next) => {
   try {
-    const [modified_user] = await promisePool.execute(
-      "UPDATE users SET first_name = ?, last_name = ?, email = ?, passwd = ? WHERE user_id = ?",
-      ([user.first_name, user.last_name, user.email, user.passwd, id])
-    );
-    return modified_user;
+    if (current_user.role === 0) {
+      const [modified_user] = await promisePool.execute(
+        "UPDATE users SET first_name = ?, last_name = ?, email = ?, passwd = ? WHERE user_id = ?",
+        ([user.first_name, user.last_name, user.email, user.passwd, id])
+      );
+      return modified_user;
+    } else {
+      const [modified_user] = await promisePool.execute(
+        "UPDATE users SET first_name = ?, last_name = ?, email = ?, passwd = ? WHERE user_id = ? AND user_id = ?",
+        ([user.first_name, user.last_name, user.email, user.passwd, id, current_user.user_id])
+      );
+      return modified_user;
+    }
   } catch (e) {
     console.error("error", e.message);
     const err = httpError("Sql error", 500);

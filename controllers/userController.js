@@ -39,7 +39,7 @@ const postUser = async (req, res, next) => {
 
 const putUser = async (req, res, next) => {
   if (controllerError("putUser validation", req, next)) return;
-  const response = await userModel.modifyUser(req.params.id, req.body, next);
+  const response = await userModel.modifyUser(req.user, req.params.id, req.body, next);
   if (response.affectedRows !== 0) {
     res.json({ message: "Successfully modified user!" });
     return;
