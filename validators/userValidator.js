@@ -28,7 +28,8 @@ exports.validateUser = [
   check('passwd')
     .trim()
     .isLength({ min: 8 })
+    .withMessage("Password needs to be at least 8 characters")
     .matches(/(?=.*[A-Z])/)
-    .withMessage('Password needs to be at least 8 characters long and contain one capital letter!')
+    .withMessage('Password needs to contain one capital letter!')
     .bail(),
 ];
