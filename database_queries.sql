@@ -13,6 +13,7 @@ CREATE TABLE listings (
   seller_id INT NOT NULL,
   filename VARCHAR(100) NOT NULL,
   description TEXT,
+  price INT NOT NULL,
   PRIMARY KEY (listing_id),
   FOREIGN KEY (seller_id) REFERENCES users(user_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
