@@ -27,6 +27,7 @@ const getAllUsers = async (next) => {
 }
 
 const addUser = async(user, next) => {
+  console.log("Adding user", user);
   try {
     const [new_user] = await promisePool.execute(
       "INSERT INTO users (first_name, last_name, email, passwd) VALUES (?, ?, ?, ?);",
