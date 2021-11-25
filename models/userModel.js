@@ -57,9 +57,22 @@ const modifyUser = async (id, user, next) => {
   }
 }
 
+const getUserLogin = async (params) => {
+  try {
+    console.log(params);
+    const [rows] = await promisePool.execute(
+      'SELECT * FROM users WHERE email = ?;',
+      params);
+    return rows;
+  } catch (e) {
+    console.log('error', e.message);
+  }
+};
+
 module.exports = {
   getUser,
   getAllUsers,
   addUser,
   modifyUser,
+  getUserLogin,
 }

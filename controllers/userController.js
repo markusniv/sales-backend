@@ -48,9 +48,18 @@ const putUser = async (req, res, next) => {
   next(err);
 }
 
+const checkToken = (req, res, next) => {
+  if (!req.user) {
+    next(new Error('token not valid'));
+  } else {
+    res.json({ user: req.user });
+  }
+}
+
 module.exports = {
   getUser,
   getAllUsers,
   postUser,
   putUser,
+  checkToken,
 }
