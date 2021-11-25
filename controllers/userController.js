@@ -30,7 +30,7 @@ const postUser = async (req, res, next) => {
   if (controllerError("postUser validation", req, next)) return;
   const response = await userModel.addUser(req.body, next);
   if (response.insertId !== undefined) {
-    res.json({ message: "user added", user_id: response.insertId });
+    res.json({ message: "Registration successful!", user_id: response.insertId });
     return;
   }
   const err = httpError("Failed to add user", 400);
@@ -41,7 +41,7 @@ const putUser = async (req, res, next) => {
   if (controllerError("putUser validation", req, next)) return;
   const response = await userModel.modifyUser(req.params.id, req.body, next);
   if (response.affectedRows !== 0) {
-    res.json({ message: "user modified" });
+    res.json({ message: "Successfully modified user!" });
     return;
   }
   const err = httpError("Failed to modify user", 400);
