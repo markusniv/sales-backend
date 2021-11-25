@@ -34,8 +34,19 @@ const modifyListing = async (req, res, next) => {
   next(err);
 }
 
+const deleteListing = async (req, res, next) => {
+  const response = await listingModel.deleteListing(req.params.id, req.body, next);
+  if(response.affectedRows !== 0){
+    res.json({ message: "Listing deleted" });
+    return;
+  }
+    const err = httpError("Failed to delete listing", 400);
+    next(err);
+}
+
 module.exports = {
   getListing,
   getAllListings,
   modifyListing,
+  deleteListing,
 }

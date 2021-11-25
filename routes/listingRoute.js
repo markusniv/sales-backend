@@ -13,7 +13,8 @@ router.route("/")
 
 router.route('/:id')
   .get(listingController.getListing)
-  .put(listingController.modifyListing);
+  .put(listingController.modifyListing)
+  .delete(listingController.deleteListing);
 
 
 module.exports = router;

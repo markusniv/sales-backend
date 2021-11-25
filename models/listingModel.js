@@ -28,6 +28,9 @@ const getAllListings = async (next) => {
   }
 }
 
+
+// TODO: Only listing owner or admin can modify listings.
+//Modify price or description of the listing
 const modifyListing = async (id, listing, next) => {
   try{
     const [modified_listing] = await promisePool.execute(
@@ -41,10 +44,23 @@ const modifyListing = async (id, listing, next) => {
   }
 }
 
+const deleteListing = async (listing_id, next) => {
+  try{
+    const [rows] = await promisePool.execute(
+      "DELETE FROM listings WHERE listing_id = ?", [listing_id]);
+    return rows.affectedRows === 1;
+  } catch (e) {
+    console.error("error", e.message);
+    const err = httpError("sql error", 500);
+    next(err);
+  }
+}
+
 module.exports = {
   getListing,
   getAllListings,
-  modifyListing
+  modifyListing,
+  deleteListing
 }
 
 
