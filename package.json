@@ -1,0 +1,23 @@
+{
+  "name": "for-sale",
+  "version": "1.0.0",
+  "description": "backend for a online marketplace",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.metropolia.fi/for-sale/backend.git"
+  },
+  "keywords": [
+    "backend",
+    "marketplace"
+  ],
+  "author": "Markus Nivasalo, Oskari Arponen, Jani Salo",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.15"
+  }
+}

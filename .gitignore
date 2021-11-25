@@ -119,3 +119,6 @@ dist
 
 #WebStorm
 .idea
+
+#.env
+/.env
