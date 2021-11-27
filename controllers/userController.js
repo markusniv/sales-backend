@@ -26,17 +26,6 @@ const getAllUsers = async (req, res, next) => {
   next(err);
 }
 
-const postUser = async (req, res, next) => {
-  if (controllerError("postUser validation", req, next)) return;
-  const response = await userModel.addUser(req.body, next);
-  if (response.insertId !== undefined) {
-    res.json({ message: "Registration successful!", user_id: response.insertId });
-    return;
-  }
-  const err = httpError("Failed to add user", 400);
-  next(err);
-}
-
 const putUser = async (req, res, next) => {
   if (controllerError("putUser validation", req, next)) return;
   const response = await userModel.modifyUser(req.user, req.params.id, req.body, next);
@@ -59,7 +48,6 @@ const checkToken = (req, res, next) => {
 module.exports = {
   getUser,
   getAllUsers,
-  postUser,
   putUser,
   checkToken,
 }

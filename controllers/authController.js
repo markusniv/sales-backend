@@ -1,7 +1,9 @@
 'use strict';
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
-const {httpError} = require("../utils/errors");
+const bcrypt = require('bcryptjs');
+const {httpError, controllerError} = require("../utils/errors");
+const {addUser} = require("../models/userModel");
 
 const login = (req, res, next) => {
   console.log(req.body);
@@ -21,6 +23,39 @@ const login = (req, res, next) => {
   })(req,res, next);
 };
 
+const register = async (req, res, next) => {
+  if (controllerError('user_post validation', req, next)) return;
+  hashPassword(req.body.passwd)
+    .then(async (password) => {
+      const params = {
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        email: req.body.email,
+        passwd: password
+      };
+      console.log(params);
+      const result = await addUser(params, next);
+      if (result.insertId) {
+        res.json({message: `User added`, user_id: result.insertId});
+      } else {
+        res.status(400).json({error: 'register error'});
+      }
+    })
+};
+
+const logout = (req, res) => {
+  req.logout();
+  res.json({message: 'logout'});
+};
+
+const hashPassword = async (txtPassword) => {
+  const salt = await bcrypt.genSalt(10);
+  return await bcrypt.hash(txtPassword, salt);
+}
+
+
 module.exports = {
   login,
+  register,
+  logout,
 };

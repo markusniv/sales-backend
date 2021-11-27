@@ -7,7 +7,6 @@ const {validateUser} = require("../validators/userValidator");
 
 router.route("/")
   .get(userController.getAllUsers)
-  .post(validateUser, userController.postUser);
 
 router.route('/:id')
   .get(userController.getUser)
