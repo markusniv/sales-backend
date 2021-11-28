@@ -20,7 +20,7 @@ passport.use(new Strategy(
       if (await !bcrypt.compare(password, user.passwd)) {
         return done(null, false, {message: 'Incorrect email / password!'});
       }
-      delete user.password;
+      delete user.passwd;
       return done(null, {...user}, {message: 'Logged In Successfully'});
     } catch (err) {
       return done(err);
