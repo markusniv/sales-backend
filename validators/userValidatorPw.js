@@ -1,6 +1,6 @@
 const { check } = require('express-validator');
 
-exports.validateUser = [
+exports.validateUserPw = [
   check('first_name')
     .trim()
     .not()

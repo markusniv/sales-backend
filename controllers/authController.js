@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
 const {httpError, controllerError} = require("../utils/errors");
-const {addUser} = require("../models/userModel");
+const {addUser, modifyUser, getUserLogin} = require("../models/userModel");
 
 const login = (req, res, next) => {
   console.log(req.body);
@@ -20,7 +20,7 @@ const login = (req, res, next) => {
     });
     const token = jwt.sign(user, process.env.JWT_SECRET);
     return res.json({user, token});
-  })(req,res, next);
+  })(req, res, next);
 };
 
 const register = async (req, res, next) => {
@@ -58,4 +58,5 @@ module.exports = {
   login,
   register,
   logout,
+  hashPassword
 };

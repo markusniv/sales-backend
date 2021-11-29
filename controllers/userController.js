@@ -2,6 +2,9 @@
 
 const userModel = require("../models/userModel");
 const {httpError, controllerError} = require("../utils/errors");
+const {getUserLogin, modifyUser} = require("../models/userModel");
+const bcrypt = require("bcryptjs");
+const {hashPassword} = require("./authController");
 
 const getUser = async (req, res, next) => {
   const user = await userModel.getUser(req.params.id, next);
@@ -26,11 +29,48 @@ const getAllUsers = async (req, res, next) => {
   next(err);
 }
 
-const putUser = async (req, res, next) => {
-  if (controllerError("putUser validation", req, next)) return;
-  const response = await userModel.modifyUser(req.user, req.params.id, req.body, next);
-  if (response.affectedRows !== 0) {
-    res.json({ message: "Successfully modified user!" });
+const putUserPw = async (req, res, next) => {
+  if (controllerError('user_put validation', req, next)) return;
+  await getUserLogin([req.user.email]).then(async user => {
+    await checkPassword(req, next, user).then(async result => {
+      if (result) {
+        hashPassword(req.body.passwd)
+          .then(async (password) => {
+            const params = {
+              first_name: req.body.first_name,
+              last_name: req.body.last_name,
+              email: req.body.email,
+              passwd: password
+            };
+            await mod(params, req, res, next);
+          })
+      }
+    })
+  })
+};
+
+const putUserNoPw = async (req, res, next) => {
+  if (controllerError('user_put validation', req, next)) return;
+  await getUserLogin([req.user.email]).then(async user => {
+    await checkPassword(req, next, user).then(async result => {
+      console.log("checked password succesfully, result is = " + result);
+      if (result) {
+        const params = {
+          first_name: req.body.first_name,
+          last_name: req.body.last_name,
+          email: req.body.email,
+        };
+        await mod(params, req, res, next);
+      }
+    })
+  })
+};
+
+const mod = async (params, req, res, next) => {
+  console.log("starting user modification...");
+  const response = await modifyUser(req.user, params, next);
+  if (response.affectedRows) {
+    res.json({message: "Successfully modified user!"});
     return;
   }
   const err = httpError("Failed to modify user", 400);
@@ -41,13 +81,24 @@ const checkToken = (req, res, next) => {
   if (!req.user) {
     next(new Error('token not valid'));
   } else {
-    res.json({ user: req.user });
+    res.json({user: req.user});
   }
 }
+
+const checkPassword = async (req, next, user) => {
+  const result = await bcrypt.compare(req.body.old_passwd, user[0].passwd);
+  if (!result) {
+    const err = httpError("Please confirm your password and try again!", 400);
+    next(err);
+  }
+  return result;
+}
+
 
 module.exports = {
   getUser,
   getAllUsers,
-  putUser,
+  putUserPw,
+  putUserNoPw,
   checkToken,
 }
