@@ -12,12 +12,14 @@ passport.use(new Strategy(
   async (email, password, done) => {
     const params = [email];
     try {
+      console.log("Comparing passwords...");
       const [user] = await getUserLogin(params);
       console.log('Local strategy', user);
       if (user === undefined) {
         return done(null, false, {message: 'Incorrect email / password!'});
       }
-      if (await !bcrypt.compare(password, user.passwd)) {
+      const result = await bcrypt.compare(password, user.passwd);
+      if (!result) {
         return done(null, false, {message: 'Incorrect email / password!'});
       }
       delete user.passwd;

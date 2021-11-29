@@ -30,6 +30,7 @@ const getAllUsers = async (req, res, next) => {
 }
 
 const putUserPw = async (req, res, next) => {
+  console.log(req.body);
   if (controllerError('user_put validation', req, next)) return;
   await getUserLogin([req.user.email]).then(async user => {
     await checkPassword(req, next, user).then(async result => {
