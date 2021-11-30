@@ -3,6 +3,25 @@
 const commentModel = require("../models/commentModel");
 const {httpError} = require("../utils/errors");
 
+const getComment = async (req, res, next) => {
+  const comment = await commentModel.getComment(req.params.id, next);
+  if(comment) {
+    res.json(comment);
+    return;
+  }
+  const err = httpError("comment not found", 404);
+  next(err);
+}
+
+const getAllComments = async (req, res, next) => {
+  const comments = await commentModel.getAllComments();
+  if  (comments.length > 0) {
+    res.json(comments);
+    return;
+  }
+  const err = httpError("comments not found", 404);
+  next(err);
+}
 
 const addComment = async (req, res, next) => {
   try {
@@ -43,4 +62,6 @@ const deleteComment = async (req, res, next) => {
 module.exports = {
   addComment,
   deleteComment,
+  getComment,
+  getAllComments
 }

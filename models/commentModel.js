@@ -5,6 +5,32 @@ const {httpError} = require('../utils/errors');
 const promisePool = pool.promise();
 
 
+const getComment = async (commentId, next) => {
+  try{
+    const [row] = await promisePool.execute(
+      "SELECT * FROM comments WHERE comment_id = ?;",
+      ([commentId]));
+    return row[0];
+  } catch (e) {
+    console.error("error", e.message);
+    const err = httpError("sql error", 500);
+    next(err);
+  }
+}
+
+const getAllComments = async (next) => {
+  try{
+    const [rows] = await promisePool.execute(
+      "SELECT * FROM comments");
+    return rows;
+  } catch (e) {
+    console.error("error", e.message);
+    const err = httpError("sql error", 500);
+    next(err);
+  }
+}
+
+
 const addComment = async (comment, next) => {
   console.log("adding comment", comment);
   try {
@@ -34,4 +60,6 @@ const deleteComment = async (comment_id, next) => {
 module.exports = {
   addComment,
   deleteComment,
+  getComment,
+  getAllComments
 }
