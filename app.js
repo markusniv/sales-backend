@@ -6,7 +6,8 @@ const passport = require('./utils/pass');
 const auth = require('./routes/authRoute');
 
 const users = require('./routes/userRoute');
-const listings = require('./routes/listingRoute')
+const listings = require('./routes/listingRoute');
+const comments = require('./routes/commentRoute');
 
 app.use(cors());
 app.use(express.json());
@@ -16,6 +17,8 @@ app.use(passport.initialize());
 app.use('/auth', auth);
 app.use('/user', passport.authenticate('jwt', {session: false}), users);
 app.use('/listing',listings);
+app.use('/comment', comments);
+
 
 app.use((err, req, res, next) => {
     const status = err.status || 500;
