@@ -122,3 +122,10 @@ dist
 
 #.env
 /.env
+
+# ignore content of uploads and thumbnails folders
+uploads/*
+thumbnails/*
+# except one (empty) file to have the folder in version control
+!uploads/.gitkeep
+!thumbnails/.gitkeep

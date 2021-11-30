@@ -63,6 +63,20 @@ const modifyUser = async (current_user, user, next) => {
   }
 }
 
+const modifyProfilePic = async (filename, user, next) => {
+  try {
+    const [modified_user] = await promisePool.execute(
+      "UPDATE users SET profile_pic = ? WHERE user_id = ?",
+      ([filename, user.user_id])
+    );
+    return modified_user;
+  } catch (e) {
+    console.error("error", e.message);
+    const err = httpError("Sql error", 500);
+    next(err);
+  }
+}
+
 
 const getUserLogin = async (params) => {
   try {
@@ -85,4 +99,5 @@ module.exports = {
   addUser,
   modifyUser,
   getUserLogin,
+  modifyProfilePic,
 }

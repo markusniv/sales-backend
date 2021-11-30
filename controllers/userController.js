@@ -5,6 +5,7 @@ const {httpError, controllerError} = require("../utils/errors");
 const {getUserLogin, modifyUser} = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const {hashPassword} = require("./authController");
+const {makeThumbnail} = require("../utils/thumbnail");
 
 const getUser = async (req, res, next) => {
   const user = await userModel.getUser(req.params.id, next);
@@ -67,6 +68,26 @@ const putUserNoPw = async (req, res, next) => {
   })
 };
 
+const putProfilePic = async (req, res, next) => {
+  if (!req.file) {
+    const err= httpError('Invalid file', 400);
+    next(err);
+    return;
+  }
+  try {
+    const filename = req.file.filename;
+    const thumb = await makeThumbnail(req.file.path, filename);
+    const response = await userModel.modifyProfilePic(filename, req.user, next);
+    if (thumb) {
+      res.json({message: 'profile pic added', id: response.insertId});
+    }
+  } catch (e) {
+    const err = httpError('Failed to add profile picture', 400);
+    next(err);
+    return;
+  }
+}
+
 const mod = async (params, req, res, next) => {
   console.log("starting user modification...");
   const response = await modifyUser(req.user, params, next);
@@ -101,5 +122,6 @@ module.exports = {
   getAllUsers,
   putUserPw,
   putUserNoPw,
+  putProfilePic,
   checkToken,
 }
