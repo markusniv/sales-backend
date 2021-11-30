@@ -122,3 +122,7 @@ dist
 
 #.env
 /.env
+
+#uploads
+uploads/*
+!uploads/.gitkeep

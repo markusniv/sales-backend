@@ -28,9 +28,22 @@ const getAllListings = async (next) => {
   }
 }
 
+const insertListing = async (listing, next) => {
+  console.log("adding listing", listing);
+  try{
+    const [new_listing] = await promisePool.execute(
+      "INSERT INTO listings (seller_id, filename, description, price) VALUES (?, ?, ?, ?);",
+      ([listing.user_id, listing.filename, listing.description, listing.price]));
+    return new_listing;
+  } catch (e) {
+    console.error("error model insert listing", e.message);
+    const err = httpError("sql error", 500);
+    next(err);
+  }
+}
 
 // TODO: Only listing owner or admin can modify listings.
-//Modify price or description of the listing
+// Modify price or description of the listing
 const modifyListing = async (id, listing, next) => {
   try {
     const [modified_listing] = await promisePool.execute(
@@ -61,7 +74,8 @@ module.exports = {
   getListing,
   getAllListings,
   modifyListing,
-  deleteListing
+  deleteListing,
+  insertListing,
 }
 
 

@@ -24,6 +24,23 @@ const getAllListings = async (req, res, next) => {
   next(err);
 }
 
+const insertListing = async (req, res, next) => {
+  const listing = {
+    user_id: req.body.user_id,
+    filename: req.file.filename,
+    description: req.body.description,
+    price: req.body.price
+  };
+  console.log(listing);
+  const result = await (listingModel.insertListing(listing, next));
+  if(result.insertId) {
+    res.json({message: 'listing added', listing_id: result.insertId});
+  } else {
+    res.status(400).json({error: 'add listing error'});
+  }
+}
+
+
 const modifyListing = async (req, res, next) => {
   const response = await listingModel.modifyListing(req.params.id, req.body, next);
   if (response.affectedRows !== 0) {
@@ -49,4 +66,5 @@ module.exports = {
   getAllListings,
   modifyListing,
   deleteListing,
+  insertListing,
 }
