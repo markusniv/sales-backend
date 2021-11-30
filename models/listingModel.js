@@ -47,8 +47,8 @@ const insertListing = async (listing, next) => {
 const modifyListing = async (id, listing, next) => {
   try {
     const [modified_listing] = await promisePool.execute(
-      "UPDATE listings SET description = ?, price = ? WHERE listing_id = ?",
-      [listing.description, listing.price, id]);
+      "UPDATE listings SET description = ?, price = ? WHERE listing_id = ?;",
+      ([listing.description, listing.price, id]));
     return modified_listing;
   } catch (e) {
     console.error("error", e.message);
@@ -61,7 +61,7 @@ const modifyListing = async (id, listing, next) => {
 const deleteListing = async (listing_id, next) => {
   try {
     const [rows] = await promisePool.execute(
-      "DELETE FROM listings WHERE listing_id = ?", [listing_id]);
+      "DELETE FROM listings WHERE listing_id = ?;", [listing_id]);
     return rows.affectedRows === 1;
   } catch (e) {
     console.error("error", e.message);

@@ -2,6 +2,7 @@
 
 const listingModel = require("../models/listingModel");
 const {httpError} = require("../utils/errors");
+const {makeThumbnail} = require("../utils/thumbnail");
 
 
 const getListing = async (req, res, next) => {
@@ -25,40 +26,50 @@ const getAllListings = async (req, res, next) => {
 }
 
 const insertListing = async (req, res, next) => {
-  const listing = {
-    user_id: req.body.user_id,
-    filename: req.file.filename,
-    description: req.body.description,
-    price: req.body.price
-  };
-  console.log(listing);
-  const result = await (listingModel.insertListing(listing, next));
-  if(result.insertId) {
-    res.json({message: 'listing added', listing_id: result.insertId});
-  } else {
-    res.status(400).json({error: 'add listing error'});
+  try {
+    const filename = req.file.filename;
+    const thumb = await makeThumbnail(req.file.path, filename);
+    const listing = {
+      user_id: req.body.user_id,
+      filename: req.file.filename,
+      description: req.body.description,
+      price: req.body.price
+    };
+    console.log(listing);
+    const result = await (listingModel.insertListing(listing, next));
+    if (thumb) {
+      res.json({message: 'listing added', id: result.insertId});
+    }
+  } catch (e) {
+    const err = httpError('failed to add listing', 400);
+    next(err);
   }
 }
 
-
 const modifyListing = async (req, res, next) => {
-  const response = await listingModel.modifyListing(req.params.id, req.body, next);
-  if (response.affectedRows !== 0) {
-    res.json({message: "listing modified"});
-    return;
+  try {
+    const response = await listingModel.modifyListing(req.params.id, req.body, next);
+    if (response.affectedRows !== 0) {
+      res.json({message: "listing modified"});
+      return;
+    }
+  } catch (e) {
+    const err = httpError("Failed to modify listing", 400);
+    next(err);
   }
-  const err = httpError("Failed to modify listing", 400);
-  next(err);
 }
 
 const deleteListing = async (req, res, next) => {
-  const response = await listingModel.deleteListing(req.params.id, req.body, next);
-  if (response.affectedRows !== 0) {
-    res.json({message: "Listing deleted"});
-    return;
+  try {
+    const response = await listingModel.deleteListing(req.params.id, req.body, next);
+    if (response.affectedRows !== 0) {
+      res.json({message: "Listing deleted"});
+      return;
+    }
+  } catch (e) {
+    const err = httpError("Failed to delete listing", 400);
+    next(err);
   }
-  const err = httpError("Failed to delete listing", 400);
-  next(err);
 }
 
 module.exports = {
