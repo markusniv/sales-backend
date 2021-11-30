@@ -4,9 +4,22 @@ const pool = require('../database/db');
 const {httpError} = require('../utils/errors');
 const promisePool = pool.promise();
 
+//returns all comments from spesific listing
+const getListingComments = async (listingId, next) => {
+  try {
+    const [row] = await promisePool.execute(
+      "SELECT * FROM comments WHERE listing_id = ?;",
+      ([listingId]));
+    return row;
+  } catch (e) {
+    console.error("error", e.message);
+    const err = httpError("sql error", 500);
+    next(err);
+  }
+}
 
 const getComment = async (commentId, next) => {
-  try{
+  try {
     const [row] = await promisePool.execute(
       "SELECT * FROM comments WHERE comment_id = ?;",
       ([commentId]));
@@ -19,7 +32,7 @@ const getComment = async (commentId, next) => {
 }
 
 const getAllComments = async (next) => {
-  try{
+  try {
     const [rows] = await promisePool.execute(
       "SELECT * FROM comments");
     return rows;
@@ -61,5 +74,6 @@ module.exports = {
   addComment,
   deleteComment,
   getComment,
-  getAllComments
+  getAllComments,
+  getListingComments
 }

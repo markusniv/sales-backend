@@ -5,7 +5,7 @@ const {httpError} = require("../utils/errors");
 
 const getComment = async (req, res, next) => {
   const comment = await commentModel.getComment(req.params.id, next);
-  if(comment) {
+  if (comment) {
     res.json(comment);
     return;
   }
@@ -13,9 +13,19 @@ const getComment = async (req, res, next) => {
   next(err);
 }
 
+const getListingComment = async (req, res, next) => {
+  const listComment = await commentModel.getListingComments(req.params.id, next);
+  if (listComment) {
+    res.json(listComment);
+    return
+  }
+  const err = httpError("comment not found", 404);
+  next(err)
+}
+
 const getAllComments = async (req, res, next) => {
   const comments = await commentModel.getAllComments();
-  if  (comments.length > 0) {
+  if (comments.length > 0) {
     res.json(comments);
     return;
   }
@@ -40,10 +50,10 @@ const addComment = async (req, res, next) => {
 }
 
 const deleteComment = async (req, res, next) => {
-  try{
+  try {
     const response = await commentModel.deleteComment(req.params.id, req.body, next);
-    if (response.affectedRows !== 0){
-      res.json({ message: "comment deleted" });
+    if (response.affectedRows !== 0) {
+      res.json({message: "comment deleted"});
       return
     }
   } catch (e) {
@@ -53,15 +63,10 @@ const deleteComment = async (req, res, next) => {
 }
 
 
-
-
-
-
-
-
 module.exports = {
   addComment,
   deleteComment,
   getComment,
-  getAllComments
+  getAllComments,
+  getListingComment
 }
