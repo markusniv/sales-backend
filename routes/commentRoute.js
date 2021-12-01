@@ -11,7 +11,8 @@ router.route("/")
 
 router.route("/:id")
   .delete(commentController.deleteComment)
-  .get(commentController.getComment);
+  .get(commentController.getComment)
+  .put(commentController.modifyComment);
 
 router.route("/listingComments/:id")
   .get(commentController.getListingComment);

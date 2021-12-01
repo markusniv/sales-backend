@@ -49,6 +49,19 @@ const addComment = async (req, res, next) => {
   }
 }
 
+const modifyComment = async (req, res, next) => {
+  try {
+    const response = await commentModel.modifyComment(req.params.id, req.body, next);
+    if (response.affectedRows !== 0) {
+      res.json({message: "comment modified"});
+      return;
+    }
+  } catch (e) {
+    const err = httpError("Failed to modify comment", 400);
+    next(err);
+  }
+}
+
 const deleteComment = async (req, res, next) => {
   try {
     const response = await commentModel.deleteComment(req.params.id, req.body, next);
@@ -68,5 +81,6 @@ module.exports = {
   deleteComment,
   getComment,
   getAllComments,
-  getListingComment
+  getListingComment,
+  modifyComment
 }

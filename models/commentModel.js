@@ -58,6 +58,19 @@ const addComment = async (comment, next) => {
   }
 }
 
+const modifyComment = async (comment_id, comment, next) => {
+  try{
+    const [row] = await promisePool.execute(
+      "UPDATE comments SET comment = ? WHERE comment_id = ?;",
+      ([comment.comment, comment_id]));
+    return row;
+  } catch (e) {
+    console.error("error modifying comment");
+    const err = httpError("sql error", 500);
+    next(err);
+  }
+}
+
 const deleteComment = async (comment_id, next) => {
   try {
     const [rows] = await promisePool.execute(
@@ -75,5 +88,6 @@ module.exports = {
   deleteComment,
   getComment,
   getAllComments,
-  getListingComments
+  getListingComments,
+  modifyComment
 }
