@@ -36,6 +36,9 @@ const putUserPw = async (req, res, next) => {
   await getUserLogin([req.user.email]).then(async user => {
     await checkPassword(req, next, user).then(async result => {
       if (result) {
+        if (req.file) {
+          await modProfilePic(req, res, next);
+        }
         hashPassword(req.body.passwd)
           .then(async (password) => {
             const params = {
@@ -57,6 +60,9 @@ const putUserNoPw = async (req, res, next) => {
     await checkPassword(req, next, user).then(async result => {
       console.log("checked password succesfully, result is = " + result);
       if (result) {
+        if (req.file) {
+          await modProfilePic(req, res, next);
+        }
         const params = {
           first_name: req.body.first_name,
           last_name: req.body.last_name,
@@ -68,18 +74,13 @@ const putUserNoPw = async (req, res, next) => {
   })
 };
 
-const putProfilePic = async (req, res, next) => {
-  if (!req.file) {
-    const err= httpError('Invalid file', 400);
-    next(err);
-    return;
-  }
+const modProfilePic = async (req, res, next) => {
   try {
     const filename = req.file.filename;
     const thumb = await makeThumbnail(req.file.path, filename);
     const response = await userModel.modifyProfilePic(filename, req.user, next);
-    if (thumb) {
-      res.json({message: 'profile pic added', id: response.insertId});
+    if (!thumb) {
+      res.json({message: 'profile pic add failed', error: response});
     }
   } catch (e) {
     const err = httpError('Failed to add profile picture', 400);
@@ -108,6 +109,7 @@ const checkToken = (req, res, next) => {
 }
 
 const checkPassword = async (req, next, user) => {
+  console.log('checking password', user);
   const result = await bcrypt.compare(req.body.old_passwd, user[0].passwd);
   if (!result) {
     const err = httpError("Please confirm your password and try again!", 400);
@@ -122,6 +124,5 @@ module.exports = {
   getAllUsers,
   putUserPw,
   putUserNoPw,
-  putProfilePic,
   checkToken,
 }

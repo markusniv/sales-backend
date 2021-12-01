@@ -19,13 +19,10 @@ const path = require("path");
 
 router.route("/")
   .get(userController.getAllUsers)
-  .put(validateUserNoPw, userController.putUserNoPw);
+  .put(upload.single('profile_pic'), validateUserNoPw, userController.putUserNoPw);
 
 router.route('/pw')
-  .put(validateUserPw, userController.putUserPw);
-
-router.route('/pic')
-  .put(upload.single('profile_pic'), userController.putProfilePic);
+  .put(upload.single('profile_pic'), validateUserPw, userController.putUserPw);
 
 router.route('/:id')
   .get(userController.getUser);
