@@ -30,11 +30,11 @@ const addReview = async (req, res, next) => {
 }
 
 const changeReview = async (req, res, next) => {
-  try{
+  try {
     const response = await reviewModel.changeReview(req.params.id, req.body, next);
-    if(response.affectedRows !== 0){
-    res.json({ message: "review changed" });
-    return;
+    if (response.affectedRows !== 0) {
+      res.json({message: "review changed"});
+      return;
     }
   } catch (e) {
     const err = httpError("Failed to change review", 400);
@@ -43,10 +43,10 @@ const changeReview = async (req, res, next) => {
 }
 
 const deleteReview = async (req, res, next) => {
-  try{
+  try {
     const response = await reviewModel.deleteReview(req.params.id, req.body, next);
-    if (response.affectedRows !== 0){
-      res.json({ message: "review deleted"});
+    if (response.affectedRows !== 0) {
+      res.json({message: "review deleted"});
       return;
     }
   } catch (e) {

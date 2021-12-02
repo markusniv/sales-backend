@@ -34,7 +34,7 @@ const addReview = async (review, next) => {
 }
 
 const changeReview = async (review_id, review, next) => {
-  try{
+  try {
     const [row] = await promisePool.execute(
       "UPDATE reviews SET score = ? WHERE review_id = ?;",
       ([review.score, review_id]));
@@ -47,7 +47,7 @@ const changeReview = async (review_id, review, next) => {
 }
 
 const deleteReview = async (review_id, next) => {
-  try{
+  try {
     const row = await promisePool.execute(
       "DELETE FROM reviews WHERE review_id = ?;", [review_id]);
     return row.affectedRows === 1;
