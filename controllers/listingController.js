@@ -31,6 +31,7 @@ const insertListing = async (req, res, next) => {
     const thumb = await makeThumbnail(req.file.path, filename);
     const listing = {
       user_id: req.body.user_id,
+      title: req.body.title,
       filename: req.file.filename,
       description: req.body.description,
       price: req.body.price,
