@@ -15,6 +15,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
+app.use('/uploads', express.static('uploads'));
+app.use('/thumbnails', express.static('thumbnails'));
+
 app.use('/auth', auth);
 app.use('/user', passport.authenticate('jwt', {session: false}), users);
 app.use('/listing',listings);
