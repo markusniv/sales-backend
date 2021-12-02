@@ -70,12 +70,26 @@ const deleteListing = async (listing_id, next) => {
   }
 }
 
+const searchListing = async (searchParam, next) => {
+  try {
+    const [rows]= await promisePool.execute(
+      `SELECT * FROM listings WHERE title like '%${searchParam}%' OR description like '%${searchParam}%';`
+    );
+      return rows;
+  } catch (e) {
+    console.error("error", e.message);
+    const err = httpError("sql error", 500);
+    next(err);
+  }
+}
+
 module.exports = {
   getListing,
   getAllListings,
   modifyListing,
   deleteListing,
   insertListing,
+  searchListing,
 }
 
 

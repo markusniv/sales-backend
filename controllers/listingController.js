@@ -74,10 +74,21 @@ const deleteListing = async (req, res, next) => {
   }
 }
 
+const searchListing = async (req, res, next) => {
+  const listings = await listingModel.searchListing(req.params.searchParam, next);
+  if (listings.length > 0) {
+    res.json(listings);
+    return;
+  }
+  const err = httpError("No listings found, alter your search query!", 404);
+  next(err);
+}
+
 module.exports = {
   getListing,
   getAllListings,
   modifyListing,
   deleteListing,
   insertListing,
+  searchListing,
 }
