@@ -32,8 +32,8 @@ const insertListing = async (listing, next) => {
   console.log("adding listing", listing);
   try{
     const [new_listing] = await promisePool.execute(
-      "INSERT INTO listings (seller_id, filename, description, price) VALUES (?, ?, ?, ?);",
-      ([listing.user_id, listing.filename, listing.description, listing.price]));
+      "INSERT INTO listings (seller_id, filename, description, price, listing_date) VALUES (?, ?, ?, ?, ?);",
+      ([listing.user_id, listing.filename, listing.description, listing.price, listing.listing_date]));
     return new_listing;
   } catch (e) {
     console.error("error model insert listing", e.message);

@@ -33,7 +33,8 @@ const insertListing = async (req, res, next) => {
       user_id: req.body.user_id,
       filename: req.file.filename,
       description: req.body.description,
-      price: req.body.price
+      price: req.body.price,
+      listing_date: req.body.listing_date
     };
     console.log(listing);
     const result = await (listingModel.insertListing(listing, next));
