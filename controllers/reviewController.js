@@ -3,7 +3,7 @@
 const reviewModel = require("../models/reviewModel");
 const {httpError} = require("../utils/errors");
 
-
+// TODO calculate and send average only
 const getReviews = async (req, res, next) => {
   const reviews = await reviewModel.getReviews(req.params.id, next);
   if (reviews) {

@@ -26,6 +26,9 @@ router.route('/:id')
   .put(listingController.modifyListing)
   .delete(listingController.deleteListing);
 
+router.route('/user/:id')
+  .get(listingController.getUserListing);
+
 router.route('/search/:searchParam')
   .get(validateSearchQuery, listingController.searchListing);
 

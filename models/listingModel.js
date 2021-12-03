@@ -16,6 +16,21 @@ const getListing = async (listingId, next) => {
   }
 }
 
+//Returns users all listings
+const getUserListing = async (userId, next) => {
+  try {
+    const [row] = await promisePool.execute(
+      "SELECT * FROM listings WHERE seller_id = ?;", [userId]);
+    return row;
+  } catch (e) {
+    console.error("error", e.message);
+    const err = httpError("sql error", 500);
+    next(err);
+  }
+}
+
+
+
 //returns all listings from listings table
 const getAllListings = async (next) => {
   try {
@@ -90,6 +105,7 @@ module.exports = {
   deleteListing,
   insertListing,
   searchListing,
+  getUserListing
 }
 
 
