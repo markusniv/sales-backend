@@ -36,14 +36,16 @@ const getAllComments = async (req, res, next) => {
 const addComment = async (req, res, next) => {
   try {
     const comment = {
-      listing_id: req.body.listing_id,
-      user_id: req.body.user_id,
+      listing_id: req.params.id,
+      user_id: req.user.user_id,
       comment: req.body.comment
     };
     console.log(comment);
     const result = await (commentModel.addComment(comment, next));
     res.json({message: 'comment added', id: result.insertId});
   } catch (e) {
+    console.log(req.params.id);
+    console.log(req.user.user_id);
     const err = httpError('failed to add comment', 400);
     next(err);
   }

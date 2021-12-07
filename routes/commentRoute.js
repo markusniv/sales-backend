@@ -6,7 +6,6 @@ const commentController = require('../controllers/commentController');
 const {validateComment} = require("../validators/commentValidator");
 
 router.route("/")
-  .post(validateComment, commentController.addComment)
   .get(commentController.getAllComments);
 
 
@@ -15,8 +14,9 @@ router.route("/:id")
   .get(commentController.getComment)
   .put(validateComment, commentController.modifyComment);
 
-router.route("/listingComments/:id")
-  .get(commentController.getListingComment);
+router.route("/listing/:id")
+  .get(commentController.getListingComment)
+  .post(validateComment, commentController.addComment);
 
 
 module.exports = router;
