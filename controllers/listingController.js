@@ -15,6 +15,16 @@ const getListing = async (req, res, next) => {
   next(err);
 }
 
+const getUserListing = async (req, res, next) => {
+  const listing = await listingModel.getUserListing(req.params.id, next);
+  if(listing.length > 0) {
+    res.json(listing);
+    return;
+  }
+  const err = httpError("listings not found", 404);
+  next(err)
+}
+
 const getAllListings = async (req, res, next) => {
   const listings = await listingModel.getAllListings();
   if (listings.length > 0) {
@@ -93,4 +103,5 @@ module.exports = {
   deleteListing,
   insertListing,
   searchListing,
+  getUserListing
 }
