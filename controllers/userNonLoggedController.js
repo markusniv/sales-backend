@@ -1,5 +1,3 @@
-const userModel = require("../models/userModel");
-const {httpError} = require("../utils/errors");
 const {getUser, getAllUsers} = require("../utils/functions");
 
 const getUserNonLogged = async (req, res, next) => {
