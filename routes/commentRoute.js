@@ -3,16 +3,17 @@
 const express = require('express');
 const router = express.Router();
 const commentController = require('../controllers/commentController');
+const {validateComment} = require("../validators/commentValidator");
 
 router.route("/")
-  .post(commentController.addComment)
+  .post(validateComment, commentController.addComment)
   .get(commentController.getAllComments);
 
 
 router.route("/:id")
   .delete(commentController.deleteComment)
   .get(commentController.getComment)
-  .put(commentController.modifyComment);
+  .put(validateComment, commentController.modifyComment);
 
 router.route("/listingComments/:id")
   .get(commentController.getListingComment);

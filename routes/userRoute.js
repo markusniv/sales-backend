@@ -18,13 +18,13 @@ const {validateUserNoPw} = require("../validators/userPutValidatorNoPw");
 const path = require("path");
 
 router.route("/")
-  .get(userController.getAllUsers)
+  .get(userController.getAllUsersLogged)
   .put(upload.single('profile_pic'), validateUserNoPw, userController.putUserNoPw);
 
 router.route('/pw')
   .put(upload.single('profile_pic'), validateUserPw, userController.putUserPw);
 
 router.route('/:id')
-  .get(userController.getUser);
+  .get(userController.getUserLogged);
 
 module.exports = router;

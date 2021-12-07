@@ -6,6 +6,7 @@ const passport = require('./utils/pass');
 const auth = require('./routes/authRoute');
 
 const users = require('./routes/userRoute');
+const usersGet = require('./routes/userNonLoggedRoute');
 const listings = require('./routes/listingRoute');
 const comments = require('./routes/commentRoute');
 const reviews = require('./routes/reviewRoute');
@@ -20,6 +21,7 @@ app.use('/thumbnails', express.static('thumbnails'));
 
 app.use('/auth', auth);
 app.use('/user', passport.authenticate('jwt', {session: false}), users);
+app.use('/userGet', usersGet)
 app.use('/listing',listings);
 app.use('/comment', comments);
 app.use('/review', reviews);

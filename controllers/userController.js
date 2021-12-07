@@ -6,28 +6,14 @@ const {getUserLogin, modifyUser} = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const {hashPassword} = require("./authController");
 const {makeThumbnail} = require("../utils/thumbnail");
+const {getAllUsers, getUser} = require("../utils/functions");
 
-const getUser = async (req, res, next) => {
-  const user = await userModel.getUser(req.params.id, next);
-  if (user) {
-    res.json(user);
-    return;
-  }
-  const err = httpError("User not found", 404);
-  next(err);
+const getUserLogged = async (req, res, next) => {
+  await getUser(req, res, next);
 }
 
-const getAllUsers = async (req, res, next) => {
-  const users = await userModel.getAllUsers();
-  for (let i = 0; i < users.length; i++) {
-    delete users[i].passwd;
-  }
-  if (users.length > 0) {
-    res.json(users);
-    return;
-  }
-  const err = httpError("Users not found", 404);
-  next(err);
+const getAllUsersLogged = async (req, res, next) => {
+  await getAllUsers(req, res, next);
 }
 
 const putUserPw = async (req, res, next) => {
@@ -120,8 +106,8 @@ const checkPassword = async (req, next, user) => {
 
 
 module.exports = {
-  getUser,
-  getAllUsers,
+  getUserLogged,
+  getAllUsersLogged,
   putUserPw,
   putUserNoPw,
   checkToken,
