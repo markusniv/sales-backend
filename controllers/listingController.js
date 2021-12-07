@@ -1,7 +1,7 @@
 'use strict';
 
 const listingModel = require("../models/listingModel");
-const {httpError} = require("../utils/errors");
+const {httpError, controllerError} = require("../utils/errors");
 const {makeThumbnail} = require("../utils/thumbnail");
 
 
@@ -26,6 +26,7 @@ const getAllListings = async (req, res, next) => {
 }
 
 const insertListing = async (req, res, next) => {
+  if (controllerError('listing_post validation', req, next)) return;
   try {
     const filename = req.file.filename;
     const thumb = await makeThumbnail(req.file.path, filename);
@@ -49,6 +50,7 @@ const insertListing = async (req, res, next) => {
 }
 
 const modifyListing = async (req, res, next) => {
+  if (controllerError('listing_put validation', req, next)) return;
   try {
     const response = await listingModel.modifyListing(req.params.id, req.body, next);
     if (response.affectedRows !== 0) {
