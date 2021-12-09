@@ -17,7 +17,7 @@ const getListing = async (req, res, next) => {
 
 const getUserListing = async (req, res, next) => {
   const listing = await listingModel.getUserListing(req.params.id, next);
-  if(listing.length > 0) {
+  if (listing.length > 0) {
     res.json(listing);
     return;
   }
@@ -103,5 +103,5 @@ module.exports = {
   deleteListing,
   insertListing,
   searchListing,
-  getUserListing
+  getUserListing,
 }

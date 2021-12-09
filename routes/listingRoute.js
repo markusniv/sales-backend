@@ -15,7 +15,7 @@ const fileFilter = (req, file, cb) => {
   }
 }
 
-const upload = multer( { dest: './uploads/', fileFilter});
+const upload = multer({dest: './uploads/', fileFilter});
 
 
 router.route("/")
@@ -32,7 +32,6 @@ router.route('/user/:id')
 
 router.route('/search/:searchParam')
   .get(validateSearchQuery, listingController.searchListing);
-
 
 module.exports = router;
 

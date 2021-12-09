@@ -30,7 +30,6 @@ const getUserListing = async (userId, next) => {
 }
 
 
-
 //returns all listings from listings table
 const getAllListings = async (next) => {
   try {
@@ -45,7 +44,7 @@ const getAllListings = async (next) => {
 
 const insertListing = async (listing, next) => {
   console.log("adding listing", listing);
-  try{
+  try {
     const [new_listing] = await promisePool.execute(
       "INSERT INTO listings (seller_id, title, filename, description, price, listing_date) VALUES (?, ?, ?, ?, ?, ?);",
       ([listing.user_id, listing.title, listing.filename, listing.description, listing.price, listing.listing_date]));
@@ -62,8 +61,8 @@ const insertListing = async (listing, next) => {
 const modifyListing = async (id, listing, next) => {
   try {
     const [modified_listing] = await promisePool.execute(
-      "UPDATE listings SET description = ?, price = ? WHERE listing_id = ?;",
-      ([listing.description, listing.price, id]));
+      "UPDATE listings SET title = ?, description = ?, price = ? WHERE listing_id = ?;",
+      ([listing.title, listing.description, listing.price, id]));
     return modified_listing;
   } catch (e) {
     console.error("error", e.message);
@@ -71,6 +70,7 @@ const modifyListing = async (id, listing, next) => {
     next(err);
   }
 }
+
 // TODO: Only listing owner or admin can delete listings.
 //Delete specific listing from database
 const deleteListing = async (listing_id, next) => {
@@ -87,10 +87,10 @@ const deleteListing = async (listing_id, next) => {
 
 const searchListing = async (searchParam, next) => {
   try {
-    const [rows]= await promisePool.execute(
+    const [rows] = await promisePool.execute(
       `SELECT * FROM listings WHERE title like '%${searchParam}%' OR description like '%${searchParam}%';`
     );
-      return rows;
+    return rows;
   } catch (e) {
     console.error("error", e.message);
     const err = httpError("sql error", 500);
@@ -105,7 +105,7 @@ module.exports = {
   deleteListing,
   insertListing,
   searchListing,
-  getUserListing
+  getUserListing,
 }
 
 
