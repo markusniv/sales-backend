@@ -79,6 +79,7 @@ const modifyListing = async (req, res, next) => {
 const modifyListingPic = async (req, res, next) => {
   try {
     const filename = req.file.filename;
+    const thumb = await makeThumbnail(req.file.path, filename);
     const response = await listingModel.modifyListingPic(req.params.id, filename, next);
     if (response.affectedRows !== 0) {
       res.json({message: "listing pic changed"});
