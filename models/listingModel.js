@@ -71,6 +71,19 @@ const modifyListing = async (id, listing, next) => {
   }
 }
 
+const modifyListingPic = async (id, filename, next) => {
+  try{
+    const [modified_listing] = await promisePool.execute(
+      "UPDATE listings SET filename = ? WHERE listing_id = ?;",
+      ([filename, id]));
+    return modified_listing;
+  } catch (e) {
+    console.error("error", e.message);
+    const err = httpError("sql error", 500);
+    next(err);
+  }
+}
+
 // TODO: Only listing owner or admin can delete listings.
 //Delete specific listing from database
 const deleteListing = async (listing_id, next) => {
@@ -106,6 +119,7 @@ module.exports = {
   insertListing,
   searchListing,
   getUserListing,
+  modifyListingPic
 }
 
 

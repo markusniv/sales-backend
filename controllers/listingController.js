@@ -60,15 +60,32 @@ const insertListing = async (req, res, next) => {
 }
 
 const modifyListing = async (req, res, next) => {
-  if (controllerError('listing_put validation', req, next)) return;
   try {
+    if (req.file) {
+      await modifyListingPic(req, res, next);
+      //res.json({message: "listing picture modified"});
+    }
+    if (controllerError('listing_put validation', req, next)) return;
     const response = await listingModel.modifyListing(req.params.id, req.body, next);
-    if (response.affectedRows !== 0) {
+    if (response) {
       res.json({message: "listing modified"});
-      return;
     }
   } catch (e) {
     const err = httpError("Failed to modify listing", 400);
+    next(err);
+  }
+}
+
+const modifyListingPic = async (req, res, next) => {
+  try {
+    const filename = req.file.filename;
+    const response = await listingModel.modifyListingPic(req.params.id, filename, next);
+    if (response.affectedRows !== 0) {
+      res.json({message: "listing pic changed"});
+      return;
+    }
+  } catch (e) {
+    const err = httpError("failed to change listing pic", 400);
     next(err);
   }
 }
@@ -104,4 +121,5 @@ module.exports = {
   insertListing,
   searchListing,
   getUserListing,
+  modifyListingPic
 }

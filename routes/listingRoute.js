@@ -24,7 +24,7 @@ router.route("/")
 
 router.route('/:id')
   .get(listingController.getListing)
-  .put(validateListing, listingController.modifyListing)
+  .put(upload.single('filename'), validateListing, listingController.modifyListing)
   .delete(listingController.deleteListing);
 
 router.route('/user/:id')
