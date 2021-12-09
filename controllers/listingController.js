@@ -81,8 +81,8 @@ const modifyListingPic = async (req, res, next) => {
     const filename = req.file.filename;
     const thumb = await makeThumbnail(req.file.path, filename);
     const response = await listingModel.modifyListingPic(req.params.id, filename, next);
-    if (response.affectedRows !== 0) {
-      res.json({message: "listing pic changed"});
+    if (response.affectedRows === 0) {
+      res.json({message: "listing pic change failed"});
       return;
     }
   } catch (e) {
