@@ -18,13 +18,16 @@ const getReviews = async (userId, next) => {
   }
 }
 
-
-const addReview = async (review, next) => {
+const addReview = async (review, next, reviewer) => {
   console.log("adding review", review);
+  const unique_key = review.user_id.toString() + reviewer.user_id.toString();
   try {
     const [new_review] = await promisePool.execute(
-      "INSERT INTO reviews (user_id, score) VALUES (?, ?);",
-      ([review.user_id, review.score]));
+      `INSERT INTO reviews (user_id, score, reviewer_id, unique_key)
+            VALUES ('${review.user_id}', '${review.score}', '${reviewer.user_id}', '${unique_key}')
+            ON DUPLICATE KEY UPDATE
+                score = VALUES(score);`
+    );
     return new_review;
   } catch (e) {
     console.error("error adding review");
@@ -33,14 +36,15 @@ const addReview = async (review, next) => {
   }
 }
 
-const changeReview = async (review_id, review, next) => {
+const getReview = async (userId, reviewerId, next) => {
   try {
     const [row] = await promisePool.execute(
-      "UPDATE reviews SET score = ? WHERE review_id = ?;",
-      ([review.score, review_id]));
+      "SELECT * FROM reviews WHERE user_id = ? AND reviewer_id = ?;",
+      ([userId, reviewerId]));
+    console.log(row);
     return row;
   } catch (e) {
-    console.error("Error modifying review");
+    console.log("error", e.message);
     const err = httpError("sql error", 500);
     next(err);
   }
@@ -61,6 +65,6 @@ const deleteReview = async (review_id, next) => {
 module.exports = {
   addReview,
   getReviews,
-  changeReview,
+  getReview,
   deleteReview
 }

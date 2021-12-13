@@ -6,6 +6,7 @@ CREATE TABLE users (
   passwd VARCHAR(100) NOT NULL,
   role INT NOT NULL DEFAULT 1,
   profile_pic VARCHAR(100),
+  joined_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(user_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -22,11 +23,13 @@ CREATE TABLE listings (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE reviews (
-  review_id INT NOT NULL AUTO_INCREMENT,
   user_id INT NOT NULL,
   score INT NOT NULL,
-  PRIMARY KEY (review_id),
-  FOREIGN KEY (user_id) REFERENCES users(user_id)
+  reviewer_id INT NOT NULL,
+  unique_key INT NOT NULL,
+  PRIMARY KEY (unique_key),
+  FOREIGN KEY (user_id) REFERENCES users(user_id),
+  FOREIGN KEY (reviewer_id) REFERENCES users(user_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE comments (
@@ -34,7 +37,10 @@ CREATE TABLE comments (
   listing_id INT NOT NULL,
   user_id INT NOT NULL,
   comment TEXT NOT NULL,
+  comment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (comment_id),
   FOREIGN KEY (listing_id) REFERENCES listings(listing_id),
   FOREIGN KEY (user_id) REFERENCES users(user_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE UNIQUE INDEX index_reviews_unique_key ON reviews(unique_key);

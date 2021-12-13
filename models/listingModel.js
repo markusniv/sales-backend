@@ -33,7 +33,7 @@ const getUserListing = async (userId, next) => {
 //returns all listings from listings table
 const getAllListings = async (next) => {
   try {
-    const [rows] = await promisePool.execute("SELECT * FROM listings");
+    const [rows] = await promisePool.execute("SELECT * FROM listings ORDER BY listing_date DESC;");
     return rows;
   } catch (e) {
     console.error("error", e.message);

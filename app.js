@@ -11,6 +11,7 @@ const listings = require('./routes/listingRoute');
 const comments = require('./routes/commentRoute');
 const commentGet = require('./routes/commentGetRoute');
 const reviews = require('./routes/reviewRoute');
+const reviewsAdd = require('./routes/addReviewRoute');
 
 app.use(cors());
 app.use(express.json());
@@ -27,6 +28,7 @@ app.use('/listing', listings);
 app.use('/commentGet', commentGet);
 app.use('/comment', passport.authenticate('jwt', {session: false}), comments);
 app.use('/review', reviews);
+app.use('/addReview', passport.authenticate('jwt', {session: false}), reviewsAdd);
 
 
 app.use((err, req, res, next) => {
