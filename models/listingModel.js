@@ -90,7 +90,7 @@ const modifyListingPic = async (id, filename, user, next) => {
 const deleteListing = async (listing_id, user, next) => {
   try {
     const [rows] = await promisePool.execute(
-      "DELETE FROM listings WHERE listing_id = ? AND user_id = ?;", [listing_id, user.user_id]);
+      "DELETE FROM listings WHERE listing_id = ? AND seller_id = ?;", [listing_id, user.user_id]);
     return rows.affectedRows === 1;
   } catch (e) {
     console.error("error", e.message);
