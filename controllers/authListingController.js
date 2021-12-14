@@ -37,8 +37,10 @@ const modifyListing = async (req, res, next) => {
     const response = await listingModel.modifyListing(req.params.id, req.body, req.user, next);
     if (response.affectedRows !== 0) {
       res.json({message: "listing modified"});
+      return;
     } else {
       res.json({message: "listing modifying failed!"});
+      return;
     }
   } catch (e) {
     const err = httpError("Failed to modify listing", 400);
@@ -66,6 +68,9 @@ const deleteListing = async (req, res, next) => {
     const response = await listingModel.deleteListing(req.params.id, req.user, next);
     if (response.affectedRows !== 0) {
       res.json({message: "Listing deleted"});
+      return;
+    } else {
+      res.json({message: "Deletion failed, unauthorized user?"});
       return;
     }
   } catch (e) {

@@ -91,7 +91,7 @@ const deleteListing = async (listing_id, user, next) => {
   try {
     const [rows] = await promisePool.execute(
       "DELETE FROM listings WHERE listing_id = ? AND seller_id = ?;", [listing_id, user.user_id]);
-    return rows.affectedRows === 1;
+    return rows;
   } catch (e) {
     console.error("error", e.message);
     const err = httpError("sql error", 500);
