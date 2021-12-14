@@ -8,6 +8,7 @@ const auth = require('./routes/authRoute');
 const users = require('./routes/userRoute');
 const usersGet = require('./routes/userNonLoggedRoute');
 const listings = require('./routes/listingRoute');
+const authListings = require('./routes/authListingRoute');
 const comments = require('./routes/commentRoute');
 const commentGet = require('./routes/commentGetRoute');
 const reviews = require('./routes/reviewRoute');
@@ -23,7 +24,8 @@ app.use('/thumbnails', express.static('thumbnails'));
 
 app.use('/auth', auth);
 app.use('/user', passport.authenticate('jwt', {session: false}), users);
-app.use('/userGet', usersGet)
+app.use('/userGet', usersGet);
+app.use('/authListing', passport.authenticate('jwt', {session: false}), authListings);
 app.use('/listing', listings);
 app.use('/commentGet', commentGet);
 app.use('/comment', passport.authenticate('jwt', {session: false}), comments);

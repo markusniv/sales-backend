@@ -46,8 +46,8 @@ const insertListing = async (listing, next) => {
   console.log("adding listing", listing);
   try {
     const [new_listing] = await promisePool.execute(
-      "INSERT INTO listings (seller_id, title, filename, description, price, listing_date) VALUES (?, ?, ?, ?, ?, ?);",
-      ([listing.user_id, listing.title, listing.filename, listing.description, listing.price, listing.listing_date]));
+      "INSERT INTO listings (seller_id, title, filename, description, price, listing_date) VALUES (?, ?, ?, ?, ?, ?, ?);",
+      ([listing.user_id, listing.title, listing.filename, listing.description, listing.price, listing.listing_date, listing.location]));
     return new_listing;
   } catch (e) {
     console.error("error model insert listing", e.message);
@@ -58,11 +58,12 @@ const insertListing = async (listing, next) => {
 
 // TODO: Only listing owner or admin can modify listings.
 // Modify price or description of the listing
-const modifyListing = async (id, listing, next) => {
+const modifyListing = async (id, listing, user, next) => {
+  console.log(id, listing, user);
   try {
     const [modified_listing] = await promisePool.execute(
-      "UPDATE listings SET title = ?, description = ?, price = ? WHERE listing_id = ?;",
-      ([listing.title, listing.description, listing.price, id]));
+      "UPDATE listings SET title = ?, description = ?, price = ?, location = ? WHERE listing_id = ? AND seller_id = ?;",
+      ([listing.title, listing.description, listing.price, listing.location, id, user.user_id]));
     return modified_listing;
   } catch (e) {
     console.error("error", e.message);
@@ -71,11 +72,11 @@ const modifyListing = async (id, listing, next) => {
   }
 }
 
-const modifyListingPic = async (id, filename, next) => {
+const modifyListingPic = async (id, filename, user, next) => {
   try{
     const [modified_listing] = await promisePool.execute(
-      "UPDATE listings SET filename = ? WHERE listing_id = ?;",
-      ([filename, id]));
+      "UPDATE listings SET filename = ? WHERE listing_id = ? AND seller_id = ?;",
+      ([filename, id, user.user_id]));
     return modified_listing;
   } catch (e) {
     console.error("error", e.message);
@@ -86,10 +87,10 @@ const modifyListingPic = async (id, filename, next) => {
 
 // TODO: Only listing owner or admin can delete listings.
 //Delete specific listing from database
-const deleteListing = async (listing_id, next) => {
+const deleteListing = async (listing_id, user, next) => {
   try {
     const [rows] = await promisePool.execute(
-      "DELETE FROM listings WHERE listing_id = ?;", [listing_id]);
+      "DELETE FROM listings WHERE listing_id = ? AND user_id = ?;", [listing_id, user.user_id]);
     return rows.affectedRows === 1;
   } catch (e) {
     console.error("error", e.message);
