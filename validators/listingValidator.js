@@ -22,6 +22,6 @@ exports.validateListing = [
   check('price')
     .trim()
     .escape()
-    .isNumeric()
-    .withMessage('Invalid price!')
+    .isFloat({ min: 0, max: 1000000 })
+    .withMessage('Invalid price! Amount must be between 0 - 1000000!')
 ];

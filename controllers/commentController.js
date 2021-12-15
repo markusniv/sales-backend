@@ -53,10 +53,13 @@ const addComment = async (req, res, next) => {
 
 const modifyComment = async (req, res, next) => {
   try {
-    const response = await commentModel.modifyComment(req.params.id, req.body, next);
+    const response = await commentModel.modifyComment(req.params.id, req.body, req.user, next);
     if (response.affectedRows !== 0) {
       res.json({message: "comment modified"});
       return;
+    } else {
+      res.json({message: "comment modification failed, unauthorized?"});
+      return
     }
   } catch (e) {
     const err = httpError("Failed to modify comment", 400);
@@ -66,9 +69,12 @@ const modifyComment = async (req, res, next) => {
 
 const deleteComment = async (req, res, next) => {
   try {
-    const response = await commentModel.deleteComment(req.params.id, req.body, next);
-    if (response.affectedRows !== 0) {
+    const response = await commentModel.deleteComment(req.params.id, req.user, next);
+    if (response) {
       res.json({message: "comment deleted"});
+      return
+    } else {
+      res.json({message: "comment deletion failed, unauthorized?"});
       return
     }
   } catch (e) {

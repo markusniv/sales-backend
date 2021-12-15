@@ -58,11 +58,22 @@ const addComment = async (comment, next) => {
   }
 }
 
-const modifyComment = async (comment_id, comment, next) => {
+const modifyComment = async (comment_id, comment, user, next) => {
+  let query = "";
+  let params = [];
+
+  if (user.role === 0) {
+    query = "UPDATE comments SET comment = ? WHERE comment_id = ?;"
+    params = [comment.comment, comment_id];
+  } else {
+    query = "UPDATE comments SET comment = ? WHERE comment_id = ? AND user_id = ?;"
+    params = [comment.comment, comment_id, user.user_id];
+  }
   try{
     const [row] = await promisePool.execute(
-      "UPDATE comments SET comment = ? WHERE comment_id = ?;",
-      ([comment.comment, comment_id]));
+      query,
+      params
+    );
     return row;
   } catch (e) {
     console.error("error modifying comment");
@@ -71,10 +82,22 @@ const modifyComment = async (comment_id, comment, next) => {
   }
 }
 
-const deleteComment = async (comment_id, next) => {
+const deleteComment = async (comment_id, user, next) => {
+  let query = "";
+  let params = [];
+
+  if (user.role === 0) {
+    query = "DELETE FROM comments WHERE comment_id = ?;"
+    params = [comment_id];
+  } else {
+    query = "DELETE FROM comments WHERE comment_id = ? AND user_id = ?;"
+    params = [comment_id, user.user_id];
+  }
   try {
     const [rows] = await promisePool.execute(
-      "DELETE FROM comments WHERE comment_id = ?;", ([comment_id]));
+      query,
+      params
+    );
     return rows.affectedRows === 1;
   } catch (e) {
     console.error("error", e.message);

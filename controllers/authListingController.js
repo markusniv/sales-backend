@@ -35,6 +35,7 @@ const modifyListing = async (req, res, next) => {
     }
     if (controllerError('listing_put validation', req, next)) return;
     const response = await listingModel.modifyListing(req.params.id, req.body, req.user, next);
+    console.log(response);
     if (response.affectedRows !== 0) {
       res.json({message: "listing modified"});
       return;
