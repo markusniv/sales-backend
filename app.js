@@ -35,7 +35,8 @@ app.use('/addReview', passport.authenticate('jwt', {session: false}), reviewsAdd
 
 app.use((err, req, res, next) => {
     const status = err.status || 500;
-    res.status(status).json({ message: err.message || 'internal error' });
+    console.log("error");
+    res.status(status).json({ error: true, message: err.message || 'internal error' });
 });
 
 app.listen(port, () => {
