@@ -1,4 +1,9 @@
 'use strict';
+
+/*
+ * Routes for authentication functionality
+ */
+
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');

@@ -1,7 +1,14 @@
+'use strict'
+
+/*
+ * Controller handling everything regarding the listing functionality that requires authentication via the bearer token
+ */
+
 const {controllerError, httpError} = require("../utils/errors");
 const {makeThumbnail} = require("../utils/thumbnail");
 const listingModel = require("../models/listingModel");
 
+// POST
 const insertListing = async (req, res, next) => {
   if (controllerError('listing_post validation', req, next)) return;
   try {
@@ -27,15 +34,15 @@ const insertListing = async (req, res, next) => {
   }
 }
 
+// PUT
 const modifyListing = async (req, res, next) => {
   try {
+    // If a file sent, modify profile pic
     if (req.file) {
       await modifyListingPic(req, res, next);
-      //res.json({message: "listing picture modified"});
     }
     if (controllerError('listing_put validation', req, next)) return;
     const response = await listingModel.modifyListing(req.params.id, req.body, req.user, next);
-    console.log(response);
     if (response.affectedRows !== 0) {
       res.json({message: "listing modified"});
       return;
@@ -49,10 +56,15 @@ const modifyListing = async (req, res, next) => {
   }
 }
 
+// PUT for only listing pic filename
 const modifyListingPic = async (req, res, next) => {
   try {
     const filename = req.file.filename;
     const thumb = await makeThumbnail(req.file.path, filename);
+    if (!thumb){
+      res.json({ message: "Failed to create thumbnail for image, try again!" });
+      return;
+    }
     const response = await listingModel.modifyListingPic(req.params.id, filename, req.user, next);
     if (response.affectedRows === 0) {
       res.json({message: "listing pic change failed"});
@@ -64,6 +76,7 @@ const modifyListingPic = async (req, res, next) => {
   }
 }
 
+// DELETE
 const deleteListing = async (req, res, next) => {
   try {
     const response = await listingModel.deleteListing(req.params.id, req.user, next);

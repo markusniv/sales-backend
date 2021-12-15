@@ -1,5 +1,9 @@
 const { check } = require('express-validator');
 
+/*
+ * Validator for user creation and modification with new password
+ */
+
 exports.validateUserPw = [
   check('first_name')
     .trim()

@@ -1,5 +1,9 @@
 const { check } = require('express-validator');
 
+/*
+ * Validator for user modification with no new password
+ */
+
 exports.validateUserNoPw = [
   check('first_name')
     .trim()

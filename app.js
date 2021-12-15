@@ -5,14 +5,14 @@ const port = 3000;
 const passport = require('./utils/pass');
 const auth = require('./routes/authRoute');
 
-const users = require('./routes/userRoute');
-const usersGet = require('./routes/userNonLoggedRoute');
+const users = require('./routes/authUserRoute');
+const usersGet = require('./routes/userRoute');
 const listings = require('./routes/listingRoute');
 const authListings = require('./routes/authListingRoute');
-const comments = require('./routes/commentRoute');
-const commentGet = require('./routes/commentGetRoute');
+const comments = require('./routes/authCommentRoute');
+const commentGet = require('./routes/commentRoute');
 const reviews = require('./routes/reviewRoute');
-const reviewsAdd = require('./routes/addReviewRoute');
+const reviewsAdd = require('./routes/authReviewRoute');
 
 app.use(cors());
 app.use(express.json());
@@ -35,7 +35,6 @@ app.use('/addReview', passport.authenticate('jwt', {session: false}), reviewsAdd
 
 app.use((err, req, res, next) => {
     const status = err.status || 500;
-    console.log("error");
     res.status(status).json({ error: true, message: err.message || 'internal error' });
 });
 

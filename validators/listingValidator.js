@@ -1,5 +1,9 @@
 const { check } = require('express-validator');
 
+/*
+ * Validator for listing insertion and modification
+ */
+
 exports.validateListing = [
   check('title')
     .trim()

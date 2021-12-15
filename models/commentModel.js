@@ -1,10 +1,14 @@
 "use strict"
 
+/*
+ * Model for all the comment functionality and comment table's sql queries
+ */
+
 const pool = require('../database/db');
 const {httpError} = require('../utils/errors');
 const promisePool = pool.promise();
 
-//returns all comments from spesific listing
+// GET - Returns all comments from specific listings
 const getListingComments = async (listingId, next) => {
   try {
     const [row] = await promisePool.execute(
@@ -18,6 +22,7 @@ const getListingComments = async (listingId, next) => {
   }
 }
 
+// GET - Returns a specific comment base on its id
 const getComment = async (commentId, next) => {
   try {
     const [row] = await promisePool.execute(
@@ -31,19 +36,7 @@ const getComment = async (commentId, next) => {
   }
 }
 
-const getAllComments = async (next) => {
-  try {
-    const [rows] = await promisePool.execute(
-      "SELECT * FROM comments");
-    return rows;
-  } catch (e) {
-    console.error("error", e.message);
-    const err = httpError("sql error", 500);
-    next(err);
-  }
-}
-
-
+// POST - Adding a comment, comment creator based on the req.user id
 const addComment = async (comment, next) => {
   console.log("adding comment", comment);
   try {
@@ -58,6 +51,7 @@ const addComment = async (comment, next) => {
   }
 }
 
+// PUT - Modifying a comment, not available in frontend
 const modifyComment = async (comment_id, comment, user, next) => {
   let query = "";
   let params = [];
@@ -82,6 +76,7 @@ const modifyComment = async (comment_id, comment, user, next) => {
   }
 }
 
+// DELETE - Deleting a comment, available in frontend for user's own comments and for every comment if you're an admin
 const deleteComment = async (comment_id, user, next) => {
   let query = "";
   let params = [];
@@ -110,7 +105,6 @@ module.exports = {
   addComment,
   deleteComment,
   getComment,
-  getAllComments,
   getListingComments,
   modifyComment
 }

@@ -1,4 +1,9 @@
 'use strict';
+
+/*
+ * Sharp functionality for creating image thumbnails
+ */
+
 const sharp = require('sharp');
 
 const makeThumbnail = async (file, thumbname) => {

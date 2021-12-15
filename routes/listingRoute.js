@@ -1,5 +1,9 @@
 'use strict';
 
+/*
+ * Routes for non-authenticated listing functionality
+ */
+
 const express = require('express');
 const router = express.Router();
 const listingController = require('../controllers/listingController');

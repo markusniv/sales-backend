@@ -1,4 +1,9 @@
 'use strict';
+
+/*
+ * Error handling functions
+ */
+
 const {validationResult} = require("express-validator");
 
 const httpError = (message, status) => {

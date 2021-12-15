@@ -1,3 +1,9 @@
+'use strict'
+
+/*
+ * Routes for authenticated listing functionality
+ */
+
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');

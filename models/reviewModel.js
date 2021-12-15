@@ -1,10 +1,14 @@
 "use strict"
 
+/*
+ * Model for all the review functionality and review table's sql queries
+ */
+
 const pool = require('../database/db');
 const {httpError} = require('../utils/errors');
 const promisePool = pool.promise();
 
-
+// GET - Get reviews for a user
 const getReviews = async (userId, next) => {
   try {
     const [rows] = await promisePool.execute(
@@ -18,8 +22,13 @@ const getReviews = async (userId, next) => {
   }
 }
 
+/*
+ POST - Add a review for a user. Reviews have a unique key column, where the key is based on the person being reviewed
+        and the reviewer. The id's of these users are added together, e.g. "15" + "20" => unique_key: "1520". The query
+        checks whether or not a review already exists with this unique key when inserting, and if it does, it'll instead
+        do an update.
+ */
 const addReview = async (review, next, reviewer) => {
-  console.log("adding review", review);
   const unique_key = review.user_id.toString() + reviewer.user_id.toString();
   try {
     const [new_review] = await promisePool.execute(
@@ -36,12 +45,12 @@ const addReview = async (review, next, reviewer) => {
   }
 }
 
+// GET - Get a review for a specific user by a specific user
 const getReview = async (userId, reviewerId, next) => {
   try {
     const [row] = await promisePool.execute(
       "SELECT * FROM reviews WHERE user_id = ? AND reviewer_id = ?;",
       ([userId, reviewerId]));
-    console.log(row);
     return row;
   } catch (e) {
     console.log("error", e.message);
@@ -50,11 +59,21 @@ const getReview = async (userId, reviewerId, next) => {
   }
 }
 
-const deleteReview = async (review_id, next) => {
+// DELETE - Delete a singular review, not available via frontend
+const deleteReview = async (user_id, user, next) => {
+  let query = "";
+  let params = [];
+  const unique_key = user_id.toString() + user.user_id.toString();
+
+  query = "DELETE FROM reviews WHERE unique_key = ? AND reviewer_id = ?;"
+  params = [unique_key, user.user_id];
+
   try {
-    const row = await promisePool.execute(
-      "DELETE FROM reviews WHERE review_id = ?;", [review_id]);
-    return row.affectedRows === 1;
+    const [row] = await promisePool.execute(
+      query,
+      params
+    );
+    return row;
   } catch (e) {
     console.error("error", e.message);
     const err = httpError("error deleting review", 500);

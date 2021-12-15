@@ -1,9 +1,13 @@
 "use strict"
 
+/*
+ * Controller handling review functionality that doesn't require authentication
+ */
+
 const reviewModel = require("../models/reviewModel");
 const {httpError} = require("../utils/errors");
 
-//Returns average score for user
+// GET - Returns average score for user
 const getReviews = async (req, res, next) => {
   const reviews = await reviewModel.getReviews(req.params.id, next);
   let average = 0
@@ -20,20 +24,6 @@ const getReviews = async (req, res, next) => {
   next(err);
 }
 
-const deleteReview = async (req, res, next) => {
-  try {
-    const response = await reviewModel.deleteReview(req.params.id, req.body, next);
-    if (response.affectedRows !== 0) {
-      res.json({message: "review deleted"});
-      return;
-    }
-  } catch (e) {
-    const err = httpError("Failed to delete review", 400);
-    next(err);
-  }
-}
-
 module.exports = {
   getReviews,
-  deleteReview
 }

@@ -1,8 +1,13 @@
 'use strict';
 
-const listingModel = require("../models/listingModel");
-const {httpError, controllerError} = require("../utils/errors");
+/*
+ * Controller handling listing functionality that doesn't require authentication
+ */
 
+const listingModel = require("../models/listingModel");
+const {httpError} = require("../utils/errors");
+
+// GET - Get a specific listing
 const getListing = async (req, res, next) => {
   const listing = await listingModel.getListing(req.params.id, next);
   if (listing) {
@@ -13,6 +18,7 @@ const getListing = async (req, res, next) => {
   next(err);
 }
 
+// GET - Get listings for a specific user
 const getUserListing = async (req, res, next) => {
   const listing = await listingModel.getUserListing(req.params.id, next);
   if (listing.length > 0) {
@@ -23,6 +29,7 @@ const getUserListing = async (req, res, next) => {
   next(err)
 }
 
+// GET - Get all the listings
 const getAllListings = async (req, res, next) => {
   const listings = await listingModel.getAllListings();
   if (listings.length > 0) {
@@ -33,6 +40,7 @@ const getAllListings = async (req, res, next) => {
   next(err);
 }
 
+// GET - Get listings based on search parameter
 const searchListing = async (req, res, next) => {
   const listings = await listingModel.searchListing(req.params.searchParam, next);
   if (listings.length > 0) {

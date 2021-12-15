@@ -1,8 +1,14 @@
 'use strict';
+
+/*
+ * Model for all the user functionality and user table's sql queries
+ */
+
 const pool = require('../database/db');
 const {httpError} = require("../utils/errors");
 const promisePool = pool.promise();
 
+// GET - Get a singular user based on user_id
 const getUser = async (userId, next) => {
   try {
     const [row] = await promisePool.execute("SELECT * FROM users WHERE user_id = ?", [userId]);
@@ -15,6 +21,7 @@ const getUser = async (userId, next) => {
   }
 }
 
+// GET - Get all users
 const getAllUsers = async (next) => {
   try {
     const [rows] = await promisePool.execute("SELECT * FROM users");
@@ -26,6 +33,7 @@ const getAllUsers = async (next) => {
   }
 }
 
+// POST - Insert a new user into the user table
 const addUser = async(user, next) => {
   console.log("Adding user", user);
   try {
@@ -41,6 +49,7 @@ const addUser = async(user, next) => {
   }
 }
 
+// PUT - Modify user information, with two possible calls depending on whether or not user entered a new password or not
 const modifyUser = async (current_user, user, next) => {
   try {
     if (user.passwd) {
@@ -63,6 +72,7 @@ const modifyUser = async (current_user, user, next) => {
   }
 }
 
+// PUT - Modify profile pic filename
 const modifyProfilePic = async (filename, user, next) => {
   try {
     const [modified_user] = await promisePool.execute(
@@ -77,7 +87,6 @@ const modifyProfilePic = async (filename, user, next) => {
   }
 }
 
-
 const getUserLogin = async (params) => {
   try {
     console.log(params);
@@ -89,9 +98,6 @@ const getUserLogin = async (params) => {
     console.log('error', e.message);
   }
 };
-
-
-
 
 module.exports = {
   getUser,

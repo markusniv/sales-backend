@@ -1,10 +1,14 @@
 'use strict';
 
+/*
+ * Model for all the listing functionality and listing table's sql queries
+ */
+
 const pool = require('../database/db');
 const {httpError} = require("../utils/errors");
 const promisePool = pool.promise();
 
-//Returns specific listing from database
+// GET - Returns a specific listing from database
 const getListing = async (listingId, next) => {
   try {
     const [row] = await promisePool.execute("SELECT * FROM listings WHERE listing_id = ?", [listingId]);
@@ -16,7 +20,7 @@ const getListing = async (listingId, next) => {
   }
 }
 
-//Returns users all listings
+// GET - Returns a user's all listings
 const getUserListing = async (userId, next) => {
   try {
     const [row] = await promisePool.execute(
@@ -30,7 +34,7 @@ const getUserListing = async (userId, next) => {
 }
 
 
-//returns all listings from listings table
+// GET - Returns all listings from listings table, ordered by listing date (newest first)
 const getAllListings = async (next) => {
   try {
     const [rows] = await promisePool.execute("SELECT * FROM listings ORDER BY listing_date DESC;");
@@ -42,6 +46,7 @@ const getAllListings = async (next) => {
   }
 }
 
+// POST - Inserts a new listing under the current user based on req.user
 const insertListing = async (listing, next) => {
   console.log("adding listing", listing);
   try {
@@ -56,7 +61,7 @@ const insertListing = async (listing, next) => {
   }
 }
 
-// Modify price or description of the listing
+// PUT - Modify price or description of the listing, available for user's own listings and on admin for every listing
 const modifyListing = async (id, listing, user, next) => {
   let query = "";
   let params = [];
@@ -81,6 +86,7 @@ const modifyListing = async (id, listing, user, next) => {
   }
 }
 
+// PUT - Modify user's profile picture filename
 const modifyListingPic = async (id, filename, user, next) => {
   let query = "";
   let params = [];
@@ -105,7 +111,7 @@ const modifyListingPic = async (id, filename, user, next) => {
   }
 }
 
-//Delete specific listing from database
+// DELETE - Delete specific listing from database, available for user's own listings and on admin for every listing
 const deleteListing = async (listing_id, user, next) => {
   let query = "";
   let params = [];
@@ -130,6 +136,7 @@ const deleteListing = async (listing_id, user, next) => {
   }
 }
 
+// GET - Select listings from database based on search parameter, searched from listing titles and descriptions
 const searchListing = async (searchParam, next) => {
   try {
     const [rows] = await promisePool.execute(
