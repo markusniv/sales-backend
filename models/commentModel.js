@@ -12,7 +12,7 @@ const promisePool = pool.promise();
 const getListingComments = async (listingId, next) => {
   try {
     const [row] = await promisePool.execute(
-      "SELECT * FROM comments WHERE listing_id = ?;",
+      "SELECT * FROM comments WHERE listing_id = ? ORDER BY comment_date ASC;",
       ([listingId]));
     return row;
   } catch (e) {
