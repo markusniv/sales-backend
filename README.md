@@ -1,7 +1,5 @@
 # For-Sale - Online marketplace backend
 
----
-
 A node.js backend with MariaDB database for an online marketplace.
 
 ## What's included?
