@@ -4,7 +4,7 @@
 
 A node.js backend with MariaDB database for an online marketplace.
 
-##What's included?
+## What's included?
 
 This package contains almost everything one needs to get their online marketplace started. Included is the entire node.js backend,
 alongside the .sql file you need to execute to get the database sorted out accordingly.
