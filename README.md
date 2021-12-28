@@ -26,8 +26,6 @@ JWT_SECRET=<secret-of-your-choice>
 Fill the file according to your MariaDB setup. Remember to use ``http://localhost:3000`` as ip if you're running
 on local machine. Otherwise, use the server address.
 
-That's it, you're done! You can check out an example frontend utilizing this backend [<ins>here</ins>](http://10.114.34.81/~forsale/frontend/).
-
 ## Misc
 
 This was made as the backend portion of a project for a web dev course @ [Metropolia UAS](https://www.metropolia.fi/en).
